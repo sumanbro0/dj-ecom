@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from accounts.models import Orders
+from ecom import settings
 from products.models import Category, Product
 from django.contrib import messages
 
 # Create your views here.
 def index(request):
+    print(settings.DEFAULT_DOMAIN)
     category = Category.objects.all()
     products = Product.objects.all()
     context = {
