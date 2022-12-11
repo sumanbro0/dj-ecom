@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if cart %}
+
+
+<div class="container  ">
+    <div class="d-flex flex-column m-5">
+        <div class="mb-4">
+            {% if order_id %}
+            <h3>your order id is <h1>{{order_id}}</h1> use this to track your order</h3>
+            {% endif %}
+        </div>
+        <button id="payment-button" href="#" class="btn btn-primary float-md-right"> purchase with khalti <i
+                class="fa fa-chevron-right"></i>
+        </button>
+        <a href="{% url 'index' %}" class="btn btn-primary float-md-right my-5"> <i class="fa fa-chevron-left"></i>
+            continue shopping
+        </a>
+    </div>
+
+
+</div>
+<script>
+
+    var config = {
+        // replace the publicKey with yours
+        "publicKey": "test_public_key_2a6dcab7e8e044728cbe10e6475f3df6",
+        "productIdentity": "{{cart.uid}}",
+        "productName": "Ecomm",
+        "productUrl": "http://gameofthrones.wikia.com/wiki/Dragons",
+        "paymentPreference": [
+            "KHALTI",
+            "EBANKING",
+            "MOBILE_BANKING",
+            "CONNECT_IPS",
+            "SCT",
+        ],
+        "eventHandler": {
+
+            onSuccess(payload) {
+                // hit merchant api for initiating verfication
+                fetch('{% url "verify_payment" %}', {
+                    method: "POST",
+                    body: JSON.stringify(payload),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                        "X-CSRFToken": '{{csrf_token}}'
+
+                    }
+                }).then((response) => response.json()).then((data) => console.log(data)).catch(error => console.log(error));
+                window.location.href = "{% url 'index' %}"
+            },
+            onError(error) {
+                console.log(error);
+            },
+            onClose() {
+            }
+        }
+    };
+
+    var checkout = new KhaltiCheckout(config);
+    var btn = document.getElementById("payment-button");
+    btn.onclick = function () {
+        // minimum transaction amount must be 10, i.e 1000 in paisa.
+        checkout.show({
+            amount: "{{cart.get_cart_total}}" * 100
+        });
+    }
+</script>
+{% else %}
+<h1>404 error</h1>
+{% endif %}
+{% endblock %}

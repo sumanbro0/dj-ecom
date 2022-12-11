@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    @media (min-width:380px) and (max-width: 480px) {
+        .remove {
+            position: absolute;
+            right: 4%;
+            margin-top: 21px;
+        }
+    }
+
+    @media (min-width:300px) and (max-width: 380px) {
+        .remove {
+            position: absolute;
+            right: 0%;
+            padding: 0;
+            margin-top: 21px;
+        }
+    }
+</style>
+
+<section class="section-content padding-y">
+
+    <div class="container">
+
+        <div class="row">
+            <main class="col-md-9">
+                <div class="card">
+                    {% if cart.cart_items.all %}
+                    <table class="table table-borderless table-shopping-cart">
+                        {% include 'alerts.html' %}
+                        <thead class="text-muted">
+                            <tr class="small text-uppercase">
+                                <th scope="col">Product</th>
+                                <th scope="col" width="120">Quantity</th>
+                                <th scope="col" width="120">Price</th>
+                                <th scope="col" class="text-right" width="200"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cart in cart.cart_items.all %}
+                            <tr>
+                                <td>
+                                    <figure class="itemside">
+                                        <div class="aside"><img src="{{cart.product.product_images.first.image.url}}"
+                                                class="img-sm"></div>
+                                        <figcaption class="info">
+                                            <a href="#" class="title text-dark">{{cart.product.product_name}} </a>
+                                            <p class="small text-muted">Size:
+                                                <span>{% if cart.size_varient %}{{cart.size_varient}}{% endif %}</span>
+                                                Color:<span>{% if cart.color_varient %}{{cart.color_varient}}
+                                                    {% endif %}</span>
+                                            </p>
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td>
+                                    <div class="input-group mb-3 input-spinner">
+                                        <div onclick="decrease('{{cart.product.uid}}','{{forloop.counter0}}','{% if cart.size_varient %}{{cart.size_varient}}{% endif %}','{% if cart.color_varient %}{{cart.color_varient}}{% endif %}')"
+                                            class="input-group-prepend">
+                                            <button class="btn btn-light" type="button"
+                                                id="button-minus{{forloop.counter0}}"> − </button>
+
+                                        </div>
+                                        <input disabled type="text" class="form-control" id="qty{{forloop.counter0}}"
+                                            value="{{cart.quantity}}">
+                                        <div class="input-group-append">
+                                            <button
+                                                onclick="increase('{{cart.product.uid}}','{{forloop.counter0}}','{% if cart.size_varient %}{{cart.size_varient}}{% endif %}','{% if cart.color_varient %}{{cart.color_varient}}{% endif %}')"
+                                                class="btn btn-light" type="button"
+                                                id="button-plus{{forloop.counter0}}"> + </button>
+                                        </div>
+                                    </div>
+                                    <p></p>
+                                </td>
+                                <td>
+                                    <div class="price-wrap">
+                                        <var class="price"><strong>Rs:</strong>{{cart.get_product_price}}</var>
+                                        <!-- <small class="text-muted"> $578.00 each</small> -->
+                                    </div> <!-- price-wrap .// -->
+                                </td>
+                                <td class="text-right">
+                                    <a href="{% url 'remove_cart' cart.uid %}" class="remove btn btn-light btn-round">
+                                        Remove</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="card-body border-top">
+                        <!--  -->
+                        <a id="" href="{% url 'checkout' %}" class="btn btn-primary float-md-right">
+                            checkout <i class="fa fa-chevron-right"></i>
+                        </a>
+                        <a href="{% url 'index' %}" class="btn btn-light"> <i class="fa fa-chevron-left"></i>
+                            Continue
+                            shopping </a>
+                    </div>
+                    {% else %}
+                    <h1>your cart is empty</h1>
+                    {% endif %}
+
+
+
+                </div> <!-- card.// -->
+
+                <div class="alert alert-success mt-3">
+                    <p class="icontext"><i class="icon text-success fa fa-truck"></i> Free Delivery within 1-2 weeks</p>
+                </div>
+
+            </main> <!-- col.// -->
+            <aside class="col-md-3">
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Have coupon?</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="coupon" placeholder="Coupon code">
+                                    <span class="input-group-append">
+                                        <button type="submit" class="btn btn-primary">Apply</button>
+                                    </span>
+                                </div>
+                            </div>
+                            {% if cart.coupon %}
+                            <a href="{% url 'remove_coupon' cart.uid %}" class="btn btn-success">
+                                {{cart.coupon.coupon_code}}
+                            </a>
+                            {% endif %}
+                        </form>
+                    </div> <!-- card-body.// -->
+                </div> <!-- card .// -->
+                <div class="card">
+                    <div class="card-body">
+                        <dl class="dlist-align">
+                            <dt>Total price:</dt>
+                            <dd class="text-right"></dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            {% if cart.coupon %}
+                            <dt>Discount:</dt>
+                            <dd class="text-right"><strong>Rs {{cart.coupon.discount_price}}/-</strong>
+                            </dd>
+                            {% endif %}
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Total:</dt>
+                            <dd class="text-right">
+                                <strong>Rs {{cart.get_cart_total}}/-</strong>
+                            </dd>
+                        </dl>
+                        <hr>
+                        <p class="text-center mb-3">
+                            <img src="{% static 'images/misc/payments.png' %}" height="26">
+                        </p>
+
+                    </div> <!-- card-body.// -->
+                </div> <!-- card .// -->
+            </aside> <!-- col.// -->
+        </div>
+
+    </div> <!-- container .//  -->
+</section>
+<script>
+
+    sessionStorage.setItem("id", "{{cart.uid}}")
+    function get_Price(qty, pid, size, color) {
+        window.location.href = window.location.pathname + `?pid=${pid}&qty=${qty}&size=${size}&color=${color}`
+    }
+    function increase(pid, c, size, color) {
+        document.getElementById(`qty${c}`).value++;
+        setTimeout(() => { get_Price(document.getElementById(`qty${c}`).value, pid, size, color) }, 600)
+    }
+    function decrease(pid, c, size, color) {
+        if (document.getElementById(`qty${c}`).value > 0) {
+            document.getElementById(`qty${c}`).value--;
+            setTimeout(() => { get_Price(document.getElementById(`qty${c}`).value, pid, size, color) }, 600)
+        }
+
+    }
+
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5 pt-5">
+    {% include 'alerts.html' %}
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3">
+            <figure class="card card-product-grid">
+                <div class="img-wrap"> <img src="{{product.product_images.first.image.url}}"> </div>
+
+                <figcaption class="info-wrap border-top">
+                    <div class="d-flex  justify-content-center">
+                        <div class="d-flex  flex-column">
+                            <a href="{% url 'get_product' product.slug %}" class="title">
+                                <b>{{product.product_name}}</b>
+                            </a>
+                            <div class="price mt-2">{{product.price}}</div> <!-- price-wrap.// -->
+                        </div>
+                    </div>
+                </figcaption>
+            </figure> <!-- card // -->
+        </div> <!-- col.// -->
+
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

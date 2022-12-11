@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+<style>
+    .icon-lg {
+        width: 200px;
+        height: 200px;
+        line-height: 170px;
+        font-size: 145px;
+    }
+
+    .img {
+        margin-top: -3.5rem;
+        font-weight: bold;
+        scale: 90%;
+        border: none;
+        cursor: pointer !important;
+        transition: all ease .3s;
+        margin-right: 8px;
+    }
+
+    .img:hover {
+        scale: 130%;
+        cursor: pointer;
+    }
+</style>
+
+<form action="{% url 'save_image' %}" method="post" enctype="multipart/form-data">
+    {% include 'alerts.html' %}
+    {% csrf_token %}
+    <div class="container">
+        <div class=" d-flex justify-content-center">
+            <div class="d-flex flex-column justify-content-center mt-4">
+                {% if profile.profile_image %}
+                <img class="rounded-circle border " src="{{profile.profile_image.url}}" alt="" width="200px"
+                    height="200px">
+                {% else %}
+                <i class="fa fa-user icon icon-lg rounded-circle border"></i>
+                {% endif %}
+                <div class="  d-flex justify-content-center mr-4">
+                    <input hidden type="file" onchange="upload()" id="img" name="img">
+                    <label for="img"><img class="img" src="{% static 'images/upload.png' %}" alt="" width="70px"
+                            height="60px">
+                    </label>
+                    <button hidden type="submit" id="submit">submit</button>
+                </div>
+                <div class="d-flex flex-column justify-content-center ">
+                    <h3>{{profile.user.first_name}} {{profile.user.last_name}}</h3>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</form>
+<div class="container mt-4">
+    <h2>MY ORDERS</h2>
+    {% for order in orders %}
+    <div class="container">
+        <div class="row">
+            <h4>order id:{{order.0.uid}}</h4>
+            <main class="col-md-9">
+                <div class="card">
+
+                    {% for cart in carts %}
+                    {% if order.0.cart.uid == cart.uid %}
+                    <table class="table table-borderless table-shopping-cart">
+
+                        <thead class="text-muted">
+                            <tr class="small text-uppercase">
+                                <th scope="col">Product</th>
+                                <th scope="col" width="120">Quantity</th>
+                                <th scope="col" width="120">Price</th>
+                                <th scope="col" class="text-right" width="200"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cart in cart.cart_items.all %}
+                            <tr>
+                                <td>
+                                    <figure class="itemside">
+                                        <div class="aside"><img src="{{cart.product.product_images.first.image.url}}"
+                                                class="img-sm"></div>
+                                        <figcaption class="info">
+                                            <a href="#" class="title text-dark">{{cart.product.product_name}} </a>
+                                            <p class="small text-muted">Size:
+                                                <span>{{cart.size_varient}}</span>
+                                                Color:<span>{{cart.color_varient}}</span>
+                                            </p>
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td>
+                                    <p>{{cart.quantity}}</p>
+                                </td>
+                                <td>
+                                    <div class="price-wrap">
+                                        <var class="price">{{cart.get_product_price}}</var>
+                                        <!-- <small class="text-muted"> $578.00 each</small> -->
+                                    </div> <!-- price-wrap .// -->
+                                </td>
+                                <td class="text-right">
+                                    <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light"
+                                        data-toggle="tooltip"> <i class="fa fa-heart"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if order.0.is_orderd and order.0.is_shipped and order.0.is_delevered %}
+                    <a href="{% url 'delete_orders' cart.uid %}" class="btn  btn-outline-primary"> <span
+                            class="text">delete
+                            order details</span></i> </a>
+                    {% elif order.0.is_orderd and order.0.is_shipped %}
+                    <span>Your order have been shipped</span>
+                    {% elif order.0.is_orderd %}
+                    <a href="{% url 'delete_orders' cart.uid %}" class="btn  btn-outline-primary"> <span
+                            class="text">cancel
+                            order</span></i> </a>
+                    {% endif %}
+                    <hr>
+                    {% endif %}
+                    {% endfor %}
+                </div> <!-- card.// -->
+            </main> <!-- col.// -->
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+<script>
+    function upload() {
+        setTimeout(document.getElementById('submit').click(), 1000);
+    }
+</script>
+{% else %}
+<a href="{% url 'login' %}">Please login to proceed</a>
+{% endif %}
+{% endblock %}

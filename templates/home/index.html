@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5 pt-5">
+    <div class="card">
+        <div class="card-body d-flex">
+            <div class="form-inline d-inline-flex mr-auto">
+                <labe>Category
+                    <select onchange="filter(value)" id="slectBox" class="ml-2 form-control">
+                        <option>
+                            all
+                        </option>
+                        {% for c in category %}
+                        {% if c == slected %}
+                        <option selected value="{{c.slug}}">
+                            {{c}}
+                        </option>
+                        {% else %}
+                        <option value="{{c.slug}}">
+                            {{c}}
+                        </option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </labe>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3">
+            <figure class="card card-product-grid">
+                <div class="img-wrap"> <img src="{{product.product_images.first.image.url}}"> </div>
+
+                <figcaption class="info-wrap border-top">
+                    <div class="d-flex  justify-content-center">
+                        <div class="d-flex  flex-column">
+                            <a href="{% url 'get_product' product.slug %}" class="title">
+                                <b>{{product.product_name}}</b>
+                            </a>
+                            <div class="price mt-2">{{product.price}}</div> <!-- price-wrap.// -->
+                        </div>
+                    </div>
+                </figcaption>
+            </figure> <!-- card // -->
+        </div> <!-- col.// -->
+        {% endfor %}
+    </div>
+
+</div>
+<script>
+    function filter(slug) {
+        window.location.href = window.location.pathname + `?category=${slug}`
+    }
+</script>
+{% endblock %}
