@@ -9,9 +9,12 @@ admin.site.register(CartItems)
 
 class profileAdmin(admin.ModelAdmin):
     def myphoto(self, object):
-        return format_html(
-            '<img src="{}" width="40px" />'.format(object.profile_image.url)
-        )
+        try:
+            return format_html(
+                '<img src="{}" width="40px" />'.format(object.profile_image.url)
+            )
+        except Exception as e:
+            print(e)
 
     list_display = ("myphoto", "user", "is_email_verified")
     # list_display_links = ("name", "id")
