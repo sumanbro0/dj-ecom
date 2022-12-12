@@ -332,7 +332,8 @@ def profile(request):
 
 def delete_orders(request, uid):
     cart = Cart.objects.get(uid=uid)
-    order = Orders.objects.get(cart=cart)
+    print(cart.uid)
+    order = Orders.objects.get(cart__uid=cart.uid)
     order.delete()
     cart.delete()
     messages.success(request, "Your order have been removed")

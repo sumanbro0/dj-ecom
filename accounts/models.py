@@ -40,9 +40,6 @@ class Cart(BaseModel):
                 return sum(price) - self.coupon.discount_price
         return sum(price)
 
-    def __str__(self) -> str:
-        return self.user.first_name
-
 
 class CartItems(BaseModel):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_items")
@@ -98,6 +95,3 @@ class Orders(BaseModel):
     state = models.CharField(max_length=90, null=True, blank=True)
     zip = models.CharField(max_length=10, null=True, blank=True)
     phone = models.CharField(max_length=10, null=True, blank=True)
-
-    def __str__(self) -> str:
-        return self.name
