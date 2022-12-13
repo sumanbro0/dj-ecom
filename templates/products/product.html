@@ -146,6 +146,7 @@
     let color_price = 0;
     var c = '';
     var s = '';
+    var qty = 1;
     function getColorPrice(e, count_c, color) {
         let price = $(`#radio_color${count_c}`).val()
         color_price = +price
@@ -153,7 +154,7 @@
         $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
         // console.log(c, s)
 
-        $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${$('#qty').val()}`);
+        $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${qty}`);
     }
     function getSizePrice(e, count_s, size) {
         let price = $(`#radio_size${count_s}`).val()
@@ -161,21 +162,20 @@
         s = size;
         $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
         // console.log(c, s)
-        $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${$('#qty').val()}`);
+        $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${qty}`);
     }
 
 
     function increase(e) {
         document.getElementById('qty').value++;
         $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
-
-
+        $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${$('#qty').val()}`);
     }
     function decrease(e) {
         if (document.getElementById('qty').value > 1) {
             document.getElementById('qty').value--;
             $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
-
+            $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${$('#qty').val()}`);
         }
 
     }
