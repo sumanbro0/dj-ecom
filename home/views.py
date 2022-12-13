@@ -1,18 +1,19 @@
 from django.shortcuts import render
-from accounts.models import Orders
+from accounts.models import Orders, Profile
 from ecom import settings
 from products.models import Category, Product
 from django.contrib import messages
 
 # Create your views here.
 def index(request):
-    print(settings.DEFAULT_DOMAIN)
     category = Category.objects.all()
     products = Product.objects.all()
-    context = {
-        "category": category,
-        "products": products,
-    }
+    context = {"category": category, "products": products}
+    try:
+        profile = Profile.objects.get(user=request.user)
+        context["profile"] = profile
+    except Exception as e:
+        print(e)
     if request.GET:
         if request.GET.get("category") != "all":
             cat = request.GET.get("category")

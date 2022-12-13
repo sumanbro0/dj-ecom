@@ -89,8 +89,14 @@
                                     class="badge badge-pill badge-danger notify">{{request.user.profile.get_cart_count}}</span>
                             </div>
                             <div class="widget-header icontext">
-                                <a href="{% url 'profile' %}" class="icon icon-sm rounded-circle border"><i
-                                        class="fa fa-user"></i></a>
+                                <a href="{% url 'profile' %}" class="icon icon-sm rounded-circle border">
+                                    {% if profile %}
+                                    <img src="{{profile.profile_image.url}}" height="50px" width="50px"
+                                        class="rounded-circle" alt="">
+                                    {% else %}
+                                    <i class="fa fa-user"></i>
+                                    {% endif %}
+                                </a>
                                 <div class="text">
                                     <span class="text-muted">Welcome!</span>
                                     <div>

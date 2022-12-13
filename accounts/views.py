@@ -93,7 +93,6 @@ def add_to_cart(request, uid):
                     cart=cart,
                     product=product,
                     size_varient=SizeVarient.objects.get(size_name=size),
-                    # color_varient=ColorVarient.objects.get(color_name=color),
                 )
                 item[0].quantity += int(qty)
                 item[0].save()
@@ -101,7 +100,6 @@ def add_to_cart(request, uid):
                 item = CartItems.objects.get_or_create(
                     cart=cart,
                     product=product,
-                    # size_varient=SizeVarient.objects.get(size_name=size),
                     color_varient=ColorVarient.objects.get(color_name=color),
                 )
                 item[0].quantity += int(qty)
@@ -155,7 +153,6 @@ def cart(request):
     cart = None
     try:
         cart = Cart.objects.get(is_orderd=False, user=request.user)
-        # != None and request.GET.get("size") != None
         if request.GET.get("pid"):
             product = Product.objects.get(uid=request.GET.get("pid"))
             if request.GET.get("color") and request.GET.get("size"):
@@ -332,7 +329,6 @@ def profile(request):
 
 def delete_orders(request, uid):
     cart = Cart.objects.get(uid=uid)
-    print(cart.uid)
     order = Orders.objects.get(cart__uid=cart.uid)
     order.delete()
     cart.delete()

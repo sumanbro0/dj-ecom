@@ -1,9 +1,20 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+<style>
+    #go {
+        cursor: pointer;
+        color: black;
+        text-decoration: none;
+    }
+
+    #go:hover {
+        color: white;
+
+    }
+</style>
 <section class="section-content padding-y bg">
     <div class="container">
-
         <!-- ============================ COMPONENT 1 ================================= -->
         <div class="card">
             {% include 'alerts.html' %}
@@ -46,9 +57,7 @@
                         </div> <!-- rating-wrap.// -->
 
                         <div class="mb-3">
-
-                            <var class="price h4">{{updated_price}}</var>
-                            <span class="text-muted">/per kg</span>
+                            <span id="price" class="price h4">{{updated_price}}</span>
                         </div> <!-- price-detail-wrap .// -->
 
                         <p>{{product.product_description}}</p>
@@ -63,20 +72,15 @@
                                 {% if product.color_varient %}
                                 <div class="form-group col-md">
                                     <div class="mt-1 bootstrap-iso">
-
                                         {% for color in product.color_varient.all %}
                                         <label class="custom-control custom-radio custom-control-inline">
-                                            {% if color.color_name == slected_color %}
-                                            <input required="required" type="radio"
-                                                onchange="get_Price('{{slected_size}}','{{color.color_name}}','{{qty}}')"
-                                                name="select_color" value="{{color.color_name}}" checked=""
+                                            <input required="required" type="radio" id="radio_color{{forloop.counter}}"
+                                                name="select_color" value="{{color.price}}"
+                                                onchange="getColorPrice(event,'{{forloop.counter}}','{{color.color_name}}')"
                                                 class="custom-control-input">
-                                            {% else %}
-                                            <input required="required" type="radio"
-                                                onchange="get_Price('{{slected_size}}','{{color.color_name}}','{{qty}}')"
-                                                name="select_color" class="custom-control-input">
-                                            {% endif %}
-                                            <div class="custom-control-label">{{color.color_name}}</div>
+
+                                            <div class="custom-control-label">{{color.color_name}}
+                                            </div>
                                         </label>
                                         {% endfor %}
 
@@ -93,13 +97,13 @@
                             <div class="form-group col-md flex-grow-0">
                                 <label>Quantity</label>
                                 <div class="input-group mb-3 input-spinner">
-                                    <div onclick="decrease()" class="input-group-prepend">
+                                    <div onclick="decrease(event)" class="input-group-prepend">
                                         <button class="btn btn-light" type="button" id="button-minus"> − </button>
 
                                     </div>
                                     <input disabled type="text" class="form-control" id="qty" value="{{qty}}">
                                     <div class="input-group-append">
-                                        <button onclick="increase()" class="btn btn-light" type="button"
+                                        <button onclick="increase(event)" class="btn btn-light" type="button"
                                             id="button-plus"> + </button>
                                     </div>
                                 </div>
@@ -111,16 +115,11 @@
                                 <div class="mt-1 bootstrap-iso">
                                     {% for size in product.size_varient.all %}
                                     <label class="custom-control custom-radio custom-control-inline">
-                                        {% if size.size_name == slected_size %}
-                                        <input required="required" type="radio"
-                                            onchange="get_Price('{{size.size_name}}','{{slected_color}}','{{qty}}')"
-                                            name="select_size" value="{{size.size_name}}" checked=""
+                                        <input onchange="getSizePrice(event,'{{forloop.counter}}','{{size.size_name}}')"
+                                            required="required" type="radio" name="select_size"
+                                            id="radio_size{{forloop.counter}}" value="{{size.price}}"
                                             class="custom-control-input">
-                                        {% else %}
-                                        <input required="required" type="radio"
-                                            onchange="get_Price('{{size.size_name}}','{{slected_color}}','{{qty}}')"
-                                            name="select_size" class="custom-control-input">
-                                        {% endif %}
+
                                         <div class="custom-control-label">{{size.size_name}}</div>
                                     </label>
                                     {% endfor %}
@@ -129,9 +128,8 @@
                             {% endif %}
                         </div> <!-- row.// -->
 
-                        <a href="#" class="btn  btn-primary"> Buy now </a>
-                        <a href="{% url 'add_to_cart' product.uid %}?size={{slected_size}}&color={{slected_color}}&qty={{qty}}"
-                            class="btn  btn-outline-primary"> <span class="text">Add
+                        <a id="go" href="{% url 'add_to_cart' product.uid %}?size=&color=&qty={{qty}}"
+                            class="btn btn-outline-primary"> <span class="text">Add
                                 to cart</span> <i class="fas fa-shopping-cart"></i> </a>
                     </article> <!-- product-info-aside .// -->
                 </main> <!-- col.// -->
@@ -143,21 +141,40 @@
     </div>
 </section>
 <script>
-    function get_Price(size, color, qty) {
-        window.location.href = window.location.pathname + `?size=${size}&color=${color}&qty=${qty}`
+    let updated_price = +'{{updated_price}}';
+    let size_price = 0;
+    let color_price = 0;
+    var c = '';
+    var s = '';
+    function getColorPrice(e, count_c, color) {
+        let price = $(`#radio_color${count_c}`).val()
+        color_price = +price
+        c = color;
+        $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
+        // console.log(c, s)
 
+        $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${$('#qty').val()}`);
     }
-    function increase() {
+    function getSizePrice(e, count_s, size) {
+        let price = $(`#radio_size${count_s}`).val()
+        size_price = +price
+        s = size;
+        $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
+        // console.log(c, s)
+        $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${$('#qty').val()}`);
+    }
+
+
+    function increase(e) {
         document.getElementById('qty').value++;
-        setTimeout(() => { get_Price('{{slected_size}}', '{{slected_color}}', document.getElementById('qty').value) }, 500)
-
+        $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
 
 
     }
-    function decrease() {
-        if (document.getElementById('qty').value > 0) {
+    function decrease(e) {
+        if (document.getElementById('qty').value > 1) {
             document.getElementById('qty').value--;
-            setTimeout(() => { get_Price('{{slected_size}}', '{{slected_color}}', document.getElementById('qty').value) }, 500)
+            $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
 
         }
 

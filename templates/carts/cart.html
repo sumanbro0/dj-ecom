@@ -46,7 +46,8 @@
                                         <div class="aside"><img src="{{cart.product.product_images.first.image.url}}"
                                                 class="img-sm"></div>
                                         <figcaption class="info">
-                                            <a href="#" class="title text-dark">{{cart.product.product_name}} </a>
+                                            <a href="{% url 'get_product' cart.product.slug %}"
+                                                class="title text-dark">{{cart.product.product_name}} </a>
                                             <p class="small text-muted">Size:
                                                 <span>{% if cart.size_varient %}{{cart.size_varient}}{% endif %}</span>
                                                 Color:<span>{% if cart.color_varient %}{{cart.color_varient}}
@@ -172,12 +173,12 @@
     }
     function increase(pid, c, size, color) {
         document.getElementById(`qty${c}`).value++;
-        setTimeout(() => { get_Price(document.getElementById(`qty${c}`).value, pid, size, color) }, 600)
+        get_Price(document.getElementById(`qty${c}`).value, pid, size, color)
     }
     function decrease(pid, c, size, color) {
         if (document.getElementById(`qty${c}`).value > 0) {
             document.getElementById(`qty${c}`).value--;
-            setTimeout(() => { get_Price(document.getElementById(`qty${c}`).value, pid, size, color) }, 600)
+            get_Price(document.getElementById(`qty${c}`).value, pid, size, color)
         }
 
     }
