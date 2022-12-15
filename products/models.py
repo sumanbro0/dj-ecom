@@ -63,7 +63,7 @@ class Product(BaseModel):
     size_varient = models.ManyToManyField(SizeVarient, blank=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.product_name + self.uid)
+        self.slug = slugify(self.product_name + str(self.uid)[:7])
         super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
