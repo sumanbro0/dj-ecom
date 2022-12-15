@@ -13,9 +13,9 @@ class Category(BaseModel):
     )
     category_image = models.ImageField(upload_to="media/category")
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.category_name)
-        super(Category, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.category_name)
+    #     super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.category_name
@@ -40,7 +40,11 @@ class SizeVarient(BaseModel):
 class Product(BaseModel):
     product_name = models.CharField(max_length=255)
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="products"
+        Category,
+        on_delete=models.CASCADE,
+        related_name="products",
+        blank=True,
+        null=True,
     )
     slug = models.SlugField(
         unique=True,
@@ -48,13 +52,18 @@ class Product(BaseModel):
         blank=True,
         help_text=("not required"),
     )
+    company = models.CharField(max_length=255, null=True, blank=True, default="Ecom")
+    web = models.CharField(max_length=255, null=True, blank=True, default="Ecom.com")
+    company_mail = models.CharField(
+        max_length=255, null=True, blank=True, default="Ecom@gmail.com"
+    )
     price = models.IntegerField()
     product_description = models.TextField()
     color_varient = models.ManyToManyField(ColorVarient, blank=True)
     size_varient = models.ManyToManyField(SizeVarient, blank=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.product_name)
+        self.slug = slugify(self.product_name + self.uid)
         super(Product, self).save(*args, **kwargs)
 
     def __str__(self):

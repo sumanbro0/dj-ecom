@@ -92,7 +92,7 @@ def add_to_cart(request, uid):
                 item = CartItems.objects.get_or_create(
                     cart=cart,
                     product=product,
-                    size_varient=SizeVarient.objects.get(size_name=size),
+                    size_varient=SizeVarient.objects.get(uid=size),
                 )
                 item[0].quantity += int(qty)
                 item[0].save()
@@ -100,7 +100,7 @@ def add_to_cart(request, uid):
                 item = CartItems.objects.get_or_create(
                     cart=cart,
                     product=product,
-                    color_varient=ColorVarient.objects.get(color_name=color),
+                    color_varient=ColorVarient.objects.get(uid=color),
                 )
                 item[0].quantity += int(qty)
                 item[0].save()
@@ -118,8 +118,8 @@ def add_to_cart(request, uid):
                 item = CartItems.objects.get_or_create(
                     cart=cart,
                     product=product,
-                    size_varient=SizeVarient.objects.get(size_name=size),
-                    color_varient=ColorVarient.objects.get(color_name=color),
+                    size_varient=SizeVarient.objects.get(uid=size),
+                    color_varient=ColorVarient.objects.get(uid=color),
                 )
                 item[0].quantity += int(qty)
                 item[0].save()
@@ -127,6 +127,7 @@ def add_to_cart(request, uid):
             messages.success(request, f"Item {product.product_name} added to cart")
 
         except Exception as e:
+            print(e)
             if product.size_varient.all().first() != None and not size:
                 messages.warning(request, f"please choose size")
             elif product.color_varient.all().first() != None and not color:
@@ -160,11 +161,9 @@ def cart(request):
                     product=product,
                     cart=cart,
                     color_varient=ColorVarient.objects.get(
-                        color_name=request.GET.get("color")
+                        uid=request.GET.get("color")
                     ),
-                    size_varient=SizeVarient.objects.get(
-                        size_name=request.GET.get("size")
-                    ),
+                    size_varient=SizeVarient.objects.get(uid=request.GET.get("size")),
                 )
                 cart_item.quantity = request.GET.get("qty")
                 cart_item.save()
@@ -173,7 +172,7 @@ def cart(request):
                     product=product,
                     cart=cart,
                     color_varient=ColorVarient.objects.get(
-                        color_name=request.GET.get("color")
+                        uid=request.GET.get("color")
                     ),
                 )
                 cart_item.quantity = request.GET.get("qty")
@@ -182,9 +181,7 @@ def cart(request):
                 cart_item = CartItems.objects.get(
                     product=product,
                     cart=cart,
-                    size_varient=SizeVarient.objects.get(
-                        size_name=request.GET.get("size")
-                    ),
+                    size_varient=SizeVarient.objects.get(uid=request.GET.get("size")),
                 )
                 cart_item.quantity = request.GET.get("qty")
                 cart_item.save()

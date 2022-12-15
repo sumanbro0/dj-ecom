@@ -51,6 +51,9 @@
                 <ul class="navbar-nav d-none d-md-flex mr-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'track' %}">Track order</a></li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'add_product' %}">Add Product</a></li>
+                    {% endif %}
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item"><a href="#" class="nav-link"> Call: +99812345678 </a></li>

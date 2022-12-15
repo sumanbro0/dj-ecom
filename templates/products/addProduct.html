@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style>
+
+</style>
+<div class="container">
+    <form method="post" enctype="multipart/form-data" action="{% url 'add_product' %}" class="form-horizontal mt-4">
+        {% include 'alerts.html' %}
+
+        {% csrf_token %}
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>PRODUCTS</legend>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="product_name">PRODUCT NAME</label>
+                <div class="col-md-4">
+                    <input id="product_name" name="product_name" placeholder="PRODUCT NAME"
+                        class="form-control input-md" required="" type="text">
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="product_categorie">PRODUCT CATEGORY</label>
+                <div class="col-md-4">
+                    <select id="product_categorie" name="product_category" class="form-control">
+                        <option>All</option>
+                        {% for c in cat %}
+                        <option value="{{c}}">{{c}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="product_weight">PRODUCT WEIGHT</label>
+                <div class="col-md-4">
+                    <input id="product_weight" name="product_weight" placeholder="PRODUCT WEIGHT"
+                        class="form-control input-md" required="" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="product_base_price">PRODUCT Price</label>
+                <div class="col-md-4">
+                    <input id="product_base_price" name="product_base_price" placeholder="product_base_price"
+                        class="form-control input-md" required="" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="product_description">PRODUCT DESCRIPTION</label>
+                <div class="col-md-4">
+                    <textarea class="form-control" id="product_description" name="product_description"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="product_colors">PRODUCT color variants</label>
+                <div class="col-md-4">
+                    <div id="color_var" class="form-inline">
+                    </div>
+                    <input type="hidden" id="color_count" name="color_count">
+                    <span id="add" onclick="append_colors(event)" class="btn a btn-success mb-2">Add color</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="product_colors">PRODUCT size variants</label>
+                <div class="col-md-4">
+                    <div id="size_var" class="form-inline">
+                    </div>
+                    <input type="hidden" id="size_count" name="size_count">
+                    <span id="add" onclick="append_size(event)" class="btn a btn-success mb-2">Add size</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="author">Company</label>
+                <div class="col-md-4">
+                    <input id="author" name="company" class="form-control input-md" type="text">
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="author">Company official website</label>
+                <div class="col-md-4">
+                    <input id="author" name="website" class="form-control input-md" type="url">
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="author">Company official email</label>
+                <div class="col-md-4">
+                    <input id="author" name="company_mail" class="form-control input-md" type="email">
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="filebutton">main_image</label>
+                <div id="img" class="col-md-4">
+                    <input type="file" multiple required name="images">
+                </div>
+
+            </div>
+
+            <!-- Button -->
+            <div class="form-group">
+                <div class="col-md-4">
+                    <button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+
+<script>
+    var count_s = 0;
+    var count_c = 0;
+
+    function append_colors(e) {
+        e.preventDefault();
+        var color_new_input = `<div class="input-group mb-2 mr-sm-2">
+            <input required type="text" class="form-control" id="color_name_ip" name="color_name${count_c}" placeholder="Color_name">
+            <input type="text" required placeholder="color_price Rs" class="form-control mb-2 mr-sm-2" name="color_price${count_c}" id="color_price_ip" ></div>`
+        $('#color_var').append(color_new_input)
+        count_c++
+        $('#color_count').val(count_c)
+    }
+    function append_size(e) {
+        var size_new_input = `<div><div class="input-group mb-2 mr-sm-2">
+            <input required type="text" class="form-control" name="size_name${count_s}" id="size_name_ip" placeholder="size_name">
+            <input type="text" required placeholder="size_price Rs" name="size_price${count_s}" class="form-control mb-2 mr-sm-2" id = "size_price_ip"></div></div> `
+        $('#size_var').append(size_new_input)
+        count_s++
+        $('#size_count').val(count_s)
+    }
+
+</script>
+
+{% endblock %}

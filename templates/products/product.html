@@ -76,7 +76,7 @@
                                         <label class="custom-control custom-radio custom-control-inline">
                                             <input required="required" type="radio" id="radio_color{{forloop.counter}}"
                                                 name="select_color" value="{{color.price}}"
-                                                onchange="getColorPrice(event,'{{forloop.counter}}','{{color.color_name}}')"
+                                                onchange="getColorPrice(event,'{{forloop.counter}}','{{color.uid}}')"
                                                 class="custom-control-input">
 
                                             <div class="custom-control-label">{{color.color_name}}
@@ -115,7 +115,7 @@
                                 <div class="mt-1 bootstrap-iso">
                                     {% for size in product.size_varient.all %}
                                     <label class="custom-control custom-radio custom-control-inline">
-                                        <input onchange="getSizePrice(event,'{{forloop.counter}}','{{size.size_name}}')"
+                                        <input onchange="getSizePrice(event,'{{forloop.counter}}','{{size.uid}}')"
                                             required="required" type="radio" name="select_size"
                                             id="radio_size{{forloop.counter}}" value="{{size.price}}"
                                             class="custom-control-input">
