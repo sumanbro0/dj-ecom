@@ -64,9 +64,6 @@ class CartItems(BaseModel):
             price.append(size_var_price)
         return sum(price) * self.quantity
 
-    def __str__(self) -> str:
-        return f"{self.product}-{self.color_varient}-{self.size_varient}"
-
 
 @receiver(post_save, sender=User)
 def send_email_token(sender, instance, created, **kwargs):
