@@ -2,7 +2,12 @@
 {% load static %}
 {% block content %}
 <style>
-
+    #remove {
+        margin-left: -0.5rem;
+        display: inline;
+        cursor: pointer;
+        height: 40px;
+    }
 </style>
 <div class="container">
     <form method="post" enctype="multipart/form-data" action="{% url 'add_product' %}" class="form-horizontal mt-4">
@@ -122,20 +127,29 @@
 
     function append_colors(e) {
         e.preventDefault();
-        var color_new_input = `<div class="input-group mb-2 mr-sm-2">
+        var color_new_input = `<div id=new_color_ip${count_c} class="d-flex"><div class="input-group mb-2 mr-sm-2">
             <input required type="text" class="form-control" id="color_name_ip" name="color_name${count_c}" placeholder="Color_name">
-            <input type="text" required placeholder="color_price Rs" class="form-control mb-2 mr-sm-2" name="color_price${count_c}" id="color_price_ip" ></div>`
+            <input type="text" required placeholder="color_price Rs" class="form-control mb-2 mr-sm-2" name="color_price${count_c}" id="color_price_ip" ></div><span onclick="remove_c(${count_c})" class="btn btn-warning" id="remove">remove</span></div>`
         $('#color_var').append(color_new_input)
         count_c++
         $('#color_count').val(count_c)
     }
     function append_size(e) {
-        var size_new_input = `<div><div class="input-group mb-2 mr-sm-2">
+        var size_new_input = `<div id=new_size_ip${count_s} class="d-flex"><div class="input-group mb-2 mr-sm-2">
             <input required type="text" class="form-control" name="size_name${count_s}" id="size_name_ip" placeholder="size_name">
-            <input type="text" required placeholder="size_price Rs" name="size_price${count_s}" class="form-control mb-2 mr-sm-2" id = "size_price_ip"></div></div> `
+            <input type="text" required placeholder="size_price Rs" name="size_price${count_s}" class="form-control mb-2 mr-sm-2" id = "size_price_ip"></div><span class="btn btn-warning" onclick="remove_s(${count_s})" id="remove">remove</span></div>`
         $('#size_var').append(size_new_input)
         count_s++
         $('#size_count').val(count_s)
+    }
+    function remove_s(i) {
+        count_s--
+        $('span').parent(`#new_size_ip${count_s}`).remove()
+    }
+    function remove_c(i) {
+        count_c--
+        $('span').parent(`#new_color_ip${count_c}`).remove()
+
     }
 
 </script>
