@@ -65,7 +65,7 @@ class CartItems(BaseModel):
         return sum(price) * self.quantity
 
     def __str__(self) -> str:
-        return f"{self.product.product_name}-{self.color_varient}-{self.size_varient}"
+        return f"{self.product}-{self.color_varient}-{self.size_varient}"
 
 
 @receiver(post_save, sender=User)
