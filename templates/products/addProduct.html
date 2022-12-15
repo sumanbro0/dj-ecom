@@ -145,11 +145,13 @@
     function remove_s(i) {
         count_s--
         $('span').parent(`#new_size_ip${count_s}`).remove()
+        $('#size_count').val(count_s)
+
     }
     function remove_c(i) {
         count_c--
         $('span').parent(`#new_color_ip${count_c}`).remove()
-
+        $('#color_count').val(count_c)
     }
 
 </script>
