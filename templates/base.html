@@ -93,7 +93,7 @@
                             </div>
                             <div class="widget-header icontext">
                                 <a href="{% url 'profile' %}" class="icon icon-sm rounded-circle border">
-                                    {% if profile %}
+                                    {% if profile.profile_image %}
                                     <img src="{{profile.profile_image.url}}" height="50px" width="50px"
                                         class="rounded-circle" alt="">
                                     {% else %}

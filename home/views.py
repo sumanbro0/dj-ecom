@@ -1,8 +1,12 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
 from accounts.models import Orders, Profile
+from accounts.views import logout_view
 from ecom import settings
 from products.models import Category, Product
 from django.contrib import messages
+from django.contrib.auth.models import User
+from base import emails
 
 # Create your views here.
 def index(request):
@@ -66,3 +70,57 @@ def search(request):
         "home/search.html",
         {"products": product, "keyword": keyword},
     )
+
+
+def change(request):
+    if request.method == "POST":
+        user = request.POST.get("email")
+        try:
+            if User.objects.get(username=user):
+                email = user
+                uid = User.objects.get(username=user).id
+                emails.send_change_password_email(email, uid)
+                messages.success(
+                    request,
+                    "An email has been sent to you please check your mail to proceed",
+                )
+        except Exception as e:
+            print(e)
+            messages.warning(request, "user doesnot exists")
+    return render(request, "home/change.html")
+
+
+def change_pwd(request, uid):
+    try:
+        id = uid
+        user = User.objects.get(id=id)
+        if request.method == "POST":
+            password1 = request.POST.get("new_password")
+            password2 = request.POST.get("confirm_password")
+            if password1 == password2:
+                user.set_password(password2)
+                user.save()
+                logout_view(request)
+                messages.success(request, "password changed")
+                return redirect("login_page")
+            else:
+                messages.warning(request, "passwords dont match")
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    except Exception as e:
+        print(e)
+        messages.warning(request, "invalid credentials! try again")
+        return render(request, "home/change.html")
+    return render(request, "home/new_pwd.html")
+
+
+def change_name(request, id):
+    try:
+        user = User.objects.get(id=id)
+        if request.method == "POST":
+            user.first_name = request.POST.get("first_name")
+            user.last_name = request.POST.get("last_name")
+            user.save()
+            messages.success(request, "your name have been changed")
+    except Exception as e:
+        print(e)
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))

@@ -11,21 +11,13 @@
                 {% csrf_token %}
                 {% include 'alerts.html' %}
                 <div class="form-group">
-                    <input name="email" class="form-control" placeholder="Username" type="text">
+                    <input name="new_password" class="form-control" placeholder="new_Password" type="password">
                 </div> <!-- form-group// -->
                 <div class="form-group">
-                    <input name="password" class="form-control" placeholder="Password" type="password">
-                </div> <!-- form-group// -->
-
+                    <input name="confirm_password" class="form-control" placeholder="confirm_Password" type="password">
+                </div>
                 <div class="form-group">
-                    <a href="{% url 'change' %}" class="float-right">Forgot password?</a>
-                    <label class="float-left custom-control custom-checkbox"> <input type="checkbox"
-                            class="custom-control-input" checked="">
-                        <div class="custom-control-label"> Remember </div>
-                    </label>
-                </div> <!-- form-group form-check .// -->
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block"> Login </button>
+                    <button type="submit" class="btn btn-primary btn-block"> Change password </button>
                 </div> <!-- form-group// -->
             </form>
         </div> <!-- card-body.// -->

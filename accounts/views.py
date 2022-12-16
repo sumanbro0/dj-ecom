@@ -320,6 +320,7 @@ def profile(request):
             context={"carts": cart, "orders": orders, "profile": profile},
         )
     except Exception as e:
+        print(e)
         messages.warning(request, "you are not logged in")
         return redirect("login_page")
 

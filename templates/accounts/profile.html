@@ -30,28 +30,35 @@
     {% include 'alerts.html' %}
     {% csrf_token %}
     <div class="container">
-        <div class=" d-flex justify-content-center">
-            <div class="d-flex flex-column justify-content-center mt-4">
-                {% if profile.profile_image %}
-                <img class="rounded-circle border " src="{{profile.profile_image.url}}" alt="" width="200px"
-                    height="200px">
-                {% else %}
-                <i class="fa fa-user icon icon-lg rounded-circle border"></i>
-                {% endif %}
-                <div class="  d-flex justify-content-center mr-4">
+        <div class="d-flex justify-content-center">
+            <div class="flex-column d-flex">
+                <div class="d-flex flex-column justify-content-center mt-4">
+                    {% if profile.profile_image %}
+                    <img class="rounded-circle border " src="{{profile.profile_image.url}}" alt="" width="200px"
+                        height="200px">
+                    {% else %}
+                    <i class="fa fa-user icon icon-lg rounded-circle border"></i>
+                    {% endif %}
+                </div>
+                <div class="w-50 d-flex justify-content-center mr-4">
                     <input hidden type="file" onchange="upload()" id="img" name="img">
                     <label for="img"><img class="img" src="{% static 'images/upload.png' %}" alt="" width="70px"
                             height="60px">
                     </label>
                     <button hidden type="submit" id="submit">submit</button>
                 </div>
-                <div class="d-flex flex-column justify-content-center ">
-                    <h3>{{profile.user.first_name}} {{profile.user.last_name}}</h3>
+                <div id="name" class="d-flex flex-column justify-content-center ">
+                    <div id="names">
+                        <h3>{{profile.user.first_name}} {{profile.user.last_name}}#{{profile.user.id}}
+                        </h3>
+                    </div>
+                    <span id="changeBtn" onclick="changeName(event)" class="btn btn-warning mb-2">chage name</span>
                 </div>
-
+                <a class="btn btn-primary" href="{% url 'change_pwd' profile.user.id %}">chage password</a>
             </div>
 
         </div>
+
     </div>
 </form>
 <div class="container mt-4">
@@ -133,6 +140,18 @@
 <script>
     function upload() {
         setTimeout(document.getElementById('submit').click(), 1000);
+    }
+    function changeName(e) {
+        var new_input = `<div id="first" class="d-flex">
+            <form method="post" action="{% url 'change_name' profile.user.id %}">
+                {% csrf_token %}
+            <div class="input-group mb-2 mr-sm-2">
+            <input required type="text" class="form-control" name="first_name" placeholder="First_name">
+            <input type="text"  placeholder="Last_name" class="form-control mb-2 mr-sm-2" name="last_name">
+            <button type="submit" class="btn btn-warning" id="submit">submit</button>
+            </div></form></div>`
+        $("#name").append(new_input)
+        $("#changeBtn").hide()
     }
 </script>
 {% else %}
