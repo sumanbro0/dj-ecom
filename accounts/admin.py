@@ -3,16 +3,19 @@ from .models import Cart, CartItems, Orders, Profile
 from django.utils.html import format_html
 
 # Register your models here.
+
+
+class cartItemsAdmin(admin.StackedInline):
+    model = CartItems
+
+
 class cartAdmin(admin.ModelAdmin):
     list_display = ("user", "token", "is_paid", "is_orderd")
-
-
-class cartItemsAdmin(admin.ModelAdmin):
-    list_display = ("cart", "product", "quantity")
+    inlines = [cartItemsAdmin]
 
 
 admin.site.register(Cart, cartAdmin)
-admin.site.register(CartItems, cartItemsAdmin)
+# admin.site.register(CartItems, cartItemsAdmin)
 
 
 class profileAdmin(admin.ModelAdmin):

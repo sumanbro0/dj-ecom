@@ -151,8 +151,6 @@
         color_price = +price
         c = color;
         $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
-        // console.log(c, s)
-
         $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${$('#qty').val()}`);
     }
     function getSizePrice(e, count_s, size) {
@@ -166,13 +164,13 @@
 
 
     function increase(e) {
-        $('#qty').val()++;
+        +$('#qty').val(+$('#qty').val() + 1);
         $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
         $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${$('#qty').val()}`);
     }
     function decrease(e) {
-        if ($('#qty').val() > 1) {
-            $('#qty').val()--;
+        if (+$('#qty').val() > 1) {
+            +$('#qty').val(+$('#qty').val() - 1);
             $(`#price`).html(`<h4>${(updated_price + size_price + color_price) * $('#qty').val()}</h4>`)
             $("#go").attr("href", `{% url 'add_to_cart' product.uid %}?size=${s}&color=${c}&qty=${$('#qty').val()}`);
         }

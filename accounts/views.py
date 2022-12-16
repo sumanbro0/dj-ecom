@@ -88,7 +88,7 @@ def add_to_cart(request, uid):
         user = request.user
         cart, _ = Cart.objects.get_or_create(user=user, is_orderd=False)
         try:
-            if product.color_varient.all().first() == None:
+            if not product.color_varient.all() and product.size_varient.all():
                 item = CartItems.objects.get_or_create(
                     cart=cart,
                     product=product,
@@ -96,7 +96,7 @@ def add_to_cart(request, uid):
                 )
                 item[0].quantity += int(qty)
                 item[0].save()
-            elif product.size_varient.all().first() == None:
+            elif not product.size_varient.all() and product.color_varient.all():
                 item = CartItems.objects.get_or_create(
                     cart=cart,
                     product=product,
@@ -105,8 +105,8 @@ def add_to_cart(request, uid):
                 item[0].quantity += int(qty)
                 item[0].save()
             elif (
-                product.size_varient.all().first() == None
-                and product.color_varient.all().first() == None
+                not product.size_varient.all().first()
+                and not product.color_varient.all().first()
             ):
                 item = CartItems.objects.get_or_create(
                     cart=cart,
@@ -192,7 +192,6 @@ def cart(request):
                 )
                 cart_item.quantity = request.GET.get("qty")
                 cart_item.save()
-
     except Exception as e:
         print(e)
     if request.method == "POST":
