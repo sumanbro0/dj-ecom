@@ -54,7 +54,11 @@
                     </div>
                     <span id="changeBtn" onclick="changeName(event)" class="btn btn-warning mb-2">chage name</span>
                 </div>
-                <a class="btn btn-primary" href="{% url 'change_pwd' profile.user.id %}">chage password</a>
+                <a class="btn btn-primary" href="{% url 'change_pwd' profile.user.id %}">change password</a>
+                {% if profile.is_vendor %}
+                {% else %}
+                <a class="btn btn-danger mt-2" href="{% url 'verify' profile.user.username %}">become a vendor</a>
+                {% endif %}
             </div>
 
         </div>
@@ -90,7 +94,8 @@
                                         <div class="aside"><img src="{{cart.product.product_images.first.image.url}}"
                                                 class="img-sm"></div>
                                         <figcaption class="info">
-                                            <a href="#" class="title text-dark">{{cart.product.product_name}} </a>
+                                            <a href="{% url 'get_product' cart.product.slug %}"
+                                                class="title text-dark">{{cart.product.product_name}} </a>
                                             <p class="small text-muted">Size:
                                                 <span>{{cart.size_varient}}</span>
                                                 Color:<span>{{cart.color_varient}}</span>

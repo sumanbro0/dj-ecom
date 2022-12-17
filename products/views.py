@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from .models import Category, ColorVarient, Product, ProductImage, SizeVarient
 from django.contrib import messages
+from accounts.models import Profile
 
 # Create your views here.
 def get_product(request, slug):
@@ -21,7 +22,9 @@ def get_product(request, slug):
 def add_product(request):
     cat = Category.objects.all()
     cate = None
+    user = Profile.objects.get(user=request.user)
     if request.method == "POST":
+
         product_name = request.POST.get("product_name")
         product_category = request.POST.get("product_category")
         print(product_category)
@@ -54,6 +57,7 @@ def add_product(request):
                 cu.append(cv[0].uid)
         try:
             product = Product(
+                added_by=request.user.username,
                 product_name=product_name,
                 category=cate,
                 company=company,
@@ -75,4 +79,6 @@ def add_product(request):
             img = ProductImage(product=product, image=imgx)
             img.save()
         messages.success(request, "items added")
-    return render(request, "products/addProduct.html", context={"cat": cat})
+    return render(
+        request, "products/addProduct.html", context={"cat": cat, "users": user}
+    )

@@ -38,6 +38,7 @@ class SizeVarient(BaseModel):
 
 
 class Product(BaseModel):
+    added_by = models.CharField(max_length=255, default="Ecom")
     product_name = models.CharField(max_length=255)
     category = models.ForeignKey(
         Category,

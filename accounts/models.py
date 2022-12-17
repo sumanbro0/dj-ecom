@@ -13,6 +13,7 @@ class Profile(BaseModel):
     is_email_verified = models.BooleanField(default=False)
     email_token = models.CharField(max_length=255, null=True, blank=True)
     profile_image = models.ImageField(upload_to="media/profile/%Y")
+    is_vendor = models.BooleanField(default=False)
 
     def get_cart_count(self):
         return CartItems.objects.filter(

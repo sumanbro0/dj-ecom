@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+{% if user.is_authenticated and users.is_vendor %}
 <style>
     #remove {
         margin-left: -0.5rem;
@@ -10,6 +11,9 @@
     }
 </style>
 <div class="container">
+    <h1>VENDOR NAME: {{user.first_name}} {{user.last_name}}{{user.username}}</h1>
+    <h1>VENDOR id: {{user.id}} {{user.username}}</h1>
+    <h1>VENDOR username: {{user.username}}</h1>
     <form method="post" enctype="multipart/form-data" action="{% url 'add_product' %}" class="form-horizontal mt-4">
         {% include 'alerts.html' %}
 
@@ -155,5 +159,12 @@
     }
 
 </script>
-
+{% else %}
+<div class="container  ">
+    <div class="flex-column mt-5 d-flex ">
+        <h2 class="mx-auto justify-content-center ">You are not a vendor</h2>
+        <a class="btn mx-auto btn-primary" href="{% url 'verify' user.username %}">become a vendor</a>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

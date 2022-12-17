@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Cart, CartItems, Orders, Profile
+from vendor.models import VerifyImage
 from django.utils.html import format_html
 
 # Register your models here.
@@ -18,6 +19,10 @@ admin.site.register(Cart, cartAdmin)
 # admin.site.register(CartItems, cartItemsAdmin)
 
 
+class VerifyImageAdmin(admin.StackedInline):
+    model = VerifyImage
+
+
 class profileAdmin(admin.ModelAdmin):
     def myphoto(self, object):
         try:
@@ -27,11 +32,12 @@ class profileAdmin(admin.ModelAdmin):
         except Exception as e:
             print(e)
 
-    list_display = ("myphoto", "user", "is_email_verified")
-    # list_display_links = ("name", "id")
+    inlines = [VerifyImageAdmin]
+    list_display = ("myphoto", "user", "is_email_verified", "is_vendor")
+    list_display_links = ("myphoto", "user")
     search_fields = ("user__username",)
     # list_filter = ("camera_type", "category")
-    list_editable = ("is_email_verified",)
+    list_editable = ("is_email_verified", "is_vendor")
 
 
 class orderAdmin(admin.ModelAdmin):

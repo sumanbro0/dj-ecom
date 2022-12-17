@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container">
+    {% include 'alerts.html' %}
+
+    <h1>Proof your Identity Insert photo of your national identity card</h1>
+    <div class="d-flex  w-full mt-4">
+
+        <form class="mx-auto d-flex" action="{% url 'verify' user.username %}" method="post"
+            enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group mx-auto">
+                <label class="col-md-4 control-label" for="filebutton">
+                    <h2>front_image</h2>
+                </label>
+                <div id="img" class="col-md-4">
+                    <input type="file" required name="front">
+                </div>
+            </div>
+            <div class="form-group mx-auto">
+                <label class="col-md-4 control-label" for="filebutton">
+                    <h2>back_image</h2>
+                </label>
+                <div id="img" class="col-md-4 ">
+                    <input type="file" required name="back">
+                </div>
+            </div>
+    </div>
+
+    <div class="w-100 d-flex ">
+        <button type="submit" class="btn btn-success mx-auto"> submit</button>
+    </div>
+    </form>
+</div>
+{% else %}
+<a href="{% url 'login' %}">Please login to proceed</a>
+{% endif %}
+{% endblock %}
