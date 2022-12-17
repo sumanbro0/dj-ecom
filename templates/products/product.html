@@ -66,6 +66,7 @@
                         <dl class="row">
                             <dt class="col-sm-3">Model#</dt>
                             <dd class="col-sm-9">Odsy-1000</dd>
+                            {% if product.color_varient.all %}
                             <dt class="col-sm-3">Color</dt>
                             <dd class="col-sm-9">
 
@@ -86,6 +87,7 @@
 
 
                                     </div> <!-- col.// -->
+                                    {% endif %}
                                     {% endif %}
                             </dd>
                             <dt class="col-sm-3">Delivery</dt>
@@ -109,7 +111,7 @@
                                 </div>
                             </div> <!-- col.// -->
 
-                            {% if product.size_varient %}
+                            {% if product.size_varient.all %}
                             <div class="form-group col-md">
                                 <label>Select size</label>
                                 <div class="mt-1 bootstrap-iso">

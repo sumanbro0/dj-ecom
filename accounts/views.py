@@ -8,6 +8,8 @@ from products.models import ColorVarient, Coupon
 import requests
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+
+from vendor.models import Wallet
 from .models import Orders, Profile
 from accounts.models import Cart, CartItems
 from .models import Product, SizeVarient
@@ -306,9 +308,13 @@ def make_pur(request):
 # @login_required()
 def profile(request):
     try:
+        cash = 0
         user = request.user
         profile = Profile.objects.get(user=user)
         cart = Cart.objects.filter(user=user, is_orderd=True)
+        if profile.is_vendor:
+            wallet = Wallet.objects.get_or_create(profile=profile)
+            cash = wallet[0].get_wallet_price(request)
         orders = []
         for c in cart:
             order = Orders.objects.filter(cart=c)
@@ -317,7 +323,7 @@ def profile(request):
         return render(
             request,
             "accounts/profile.html",
-            context={"carts": cart, "orders": orders, "profile": profile},
+            context={"carts": cart, "orders": orders, "profile": profile, "cash": cash},
         )
     except Exception as e:
         print(e)

@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from accounts.models import Profile
+from products.models import Product
 from vendor.models import VerifyImage
 
 # Create your views here.
