@@ -77,6 +77,9 @@ class Product(BaseModel):
         return self.price + ColorVarient.objects.get(color_name=color).price
 
 
+# to filter by price range greather or lesser we can use products.objects.filter(price__gt=1000) i.e for greather or similarly (price__lt=1000) for lesser
+
+
 class ProductImage(BaseModel):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="product_images"
